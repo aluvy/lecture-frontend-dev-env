@@ -2,7 +2,6 @@ const path = require("path");
 const webpack = require("webpack");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -20,7 +19,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: "[name].js",
-    assetModuleFilename: '[path][hash][ext][query]'
+    assetModuleFilename: '[path][hash][ext][query]',
+    clean: true,
   },
   devServer: {
     client: {
@@ -111,7 +111,6 @@ module.exports = {
         removeComments: true
       } : false,
     }),
-    new CleanWebpackPlugin(),
     ...(isPro) ? [new MiniCSSExtractPlugin({
         linkType: false,
         filename: "[name].css",
