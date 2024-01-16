@@ -69,6 +69,7 @@ module.exports = {
             loader: "css-loader",
             options: {
               url: true,
+              esModule: false,
             }
           },
           "sass-loader"
