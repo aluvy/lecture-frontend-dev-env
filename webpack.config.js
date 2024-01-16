@@ -8,18 +8,18 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const mode = process.env.NODE_ENV || "development";
-const isDev = mode.includes("dev");
+// const isDev = mode.includes("dev");
 const isPro = mode.includes("pro");
 
 module.exports = {
   mode,
   entry: {
-    main: "./src/app.js"
+    main: "./src/app.js",
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
-    assetModuleFilename: '[path][hash][ext][query]',
+    assetModuleFilename: "[path][hash][ext][query]",
     clean: true,
   },
   devServer: {
@@ -27,33 +27,35 @@ module.exports = {
       overlay: true,
       progress: true,
       reconnect: false,
-      logging: 'error',
+      logging: "error",
     },
     static: {
       directory: path.join(__dirname, "dist"),
-      publicPath: '/',
+      publicPath: "/",
     },
     hot: true,
     proxy: {
       "/api": "http://localhost:8081",
-    }
+    },
   },
   optimization: {
     minimize: isPro ? true : false,
-    minimizer: isPro ? [
-      new CssMinimizerPlugin(),
-      new TerserPlugin({
-        terserOptions: {
-          format: {
-            comments: false,
-          },
-        },
-        extractComments: false,
-      }),
-    ] : [],
+    minimizer: isPro
+      ? [
+          new CssMinimizerPlugin(),
+          new TerserPlugin({
+            terserOptions: {
+              format: {
+                comments: false,
+              },
+            },
+            extractComments: false,
+          }),
+        ]
+      : [],
     splitChunks: {
-      chunks: "all"
-    }
+      chunks: "all",
+    },
   },
   externals: {
     axios: "axios",
@@ -70,15 +72,15 @@ module.exports = {
             options: {
               url: true,
               esModule: false,
-            }
+            },
           },
-          "sass-loader"
-        ]
+          "sass-loader",
+        ],
       },
       {
         test: /\.(png|jpg|gif|svg)$/i,
         loader: "url-loader",
-        dependency: { not: ['url'] },
+        dependency: { not: ["url"] },
         options: {
           name: "[path][name].[ext]?[hash]",
           limit: 1000, // 1kb
@@ -89,9 +91,9 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   plugins: [
     new webpack.BannerPlugin({
@@ -106,23 +108,29 @@ module.exports = {
       templateParameters: {
         env: isPro ? "" : "(개발용)",
       },
-      minify: isPro ? {
-        collapseWhitespace: true,
-        removeComments: true
-      } : false,
+      minify: isPro
+        ? {
+            collapseWhitespace: true,
+            removeComments: true,
+          }
+        : false,
     }),
-    ...(isPro) ? [new MiniCSSExtractPlugin({
-        linkType: false,
-        filename: "[name].css",
-        chunkFilename:"[name].chunk.css"
-      })] : [],
+    ...(isPro
+      ? [
+          new MiniCSSExtractPlugin({
+            linkType: false,
+            filename: "[name].css",
+            chunkFilename: "[name].chunk.css",
+          }),
+        ]
+      : []),
     new CopyPlugin({
       patterns: [
         {
           from: "./node_modules/axios/dist/axios.min.js",
-          to: "./axios.min.js"
-        }
-      ]
-    })
-  ]
-}
+          to: "./axios.min.js",
+        },
+      ],
+    }),
+  ],
+};
