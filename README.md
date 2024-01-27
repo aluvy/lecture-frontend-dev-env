@@ -1,4 +1,4 @@
-# lecture-frontend-dev-env-practice
+# lecture-frontend-dev-env
 
 ## Environment
 
